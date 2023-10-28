@@ -1,15 +1,22 @@
-import {Map, MapLayerMouseEvent, NavigationControl} from 'react-map-gl/maplibre';
-import maplibregl from 'maplibre-gl';
+import {
+  AttributionControl,
+  GeolocateControl,
+  Map,
+  MapLayerMouseEvent,
+  MapStyle,
+  NavigationControl,
+} from 'react-map-gl/maplibre';
+import maplibregl, {LayerSpecification} from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './App.css';
 
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {Protocol} from 'pmtiles';
 import layers from 'protomaps-themes-base';
 
 const TILES_URL = 'northside.pmtiles';
 
-const buildingsLayer = {
+const buildingsLayer: LayerSpecification = {
   'id': '3d-buildings',
   'source': 'pmtiles',
   'source-layer': 'buildings',
@@ -37,13 +44,14 @@ const buildingsLayer = {
   },
 };
 
-
 function App() {
-  const [mapStyle, setMapStyle] = useState<any>();
+  const mapRef = useRef<any>(null);
+
+  const [mapStyle, setMapStyle] = useState<MapStyle>();
   const [viewState, setViewState] = useState({
     longitude: 152.988942,
     latitude: -27.409726,
-    zoom: 14,
+    zoom: 15,
   });
 
   const [cursor, setCursor] = useState<string>('auto');
@@ -68,7 +76,7 @@ function App() {
     const defaultLayers = layers('pmtiles', 'light');
     // console.log(defaultLayers);
 
-    const customMapStyle = {
+    const customMapStyle: MapStyle = {
       version: 8,
       // glyphs: 'https://cdn.protomaps.com/fonts/pbf/{fontstack}/{range}.pbf',
       glyphs: 'fonts/{fontstack}/{range}.pbf',
@@ -76,14 +84,13 @@ function App() {
         'pmtiles': {
           type: 'vector',
           url: `pmtiles://${TILES_URL}`,
+          attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
         },
       },
-      attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
-      layers:
-        [
-          ...defaultLayers,
-          buildingsLayer,
-        ],
+      layers: [
+        ...defaultLayers,
+        buildingsLayer,
+      ],
     };
 
     setMapStyle(customMapStyle);
@@ -95,13 +102,29 @@ function App() {
     };
   }, []);
 
+  const rotateCamera = (timestamp: number) => {
+    // clamp the rotation between 0 -360 degrees
+    // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+    mapRef?.current?.rotateTo((timestamp / 100) % 360, {duration: 0});
+
+    // Request the next frame of the animation.
+    requestAnimationFrame(rotateCamera);
+  };
+
+  const onLoad = () => {
+    // rotateCamera(0);
+  };
+
+
   return (
     <>
       <Map
         {...viewState}
+        ref={mapRef}
         styleDiffing
         pitch={45}
 
+        onLoad={onLoad}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -110,11 +133,12 @@ function App() {
 
         onMove={evt => setViewState(evt.viewState)}
         mapStyle={mapStyle}
-        mapLib={maplibregl}
         style={{width: '100vw', height: '100vh'}}
-        attributionControl={true}
+        attributionControl={false}
       >
+        <GeolocateControl position="top-left"/>
         <NavigationControl/>
+        <AttributionControl position="bottom-right" compact={false}/>
       </Map>
     </>
   );
