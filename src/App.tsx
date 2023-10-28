@@ -14,7 +14,8 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {Protocol} from 'pmtiles';
 import layers from 'protomaps-themes-base';
 
-const TILES_URL = 'northside.pmtiles';
+const ENABLE_3D = false;
+const TILES_URL = 'queensland.pmtiles';
 
 const buildingsLayer: LayerSpecification = {
   'id': '3d-buildings',
@@ -74,22 +75,20 @@ function App() {
     maplibregl.addProtocol('pmtiles', protocol.tile);
 
     const defaultLayers = layers('pmtiles', 'light');
-    // console.log(defaultLayers);
 
     const customMapStyle: MapStyle = {
       version: 8,
-      // glyphs: 'https://cdn.protomaps.com/fonts/pbf/{fontstack}/{range}.pbf',
       glyphs: 'fonts/{fontstack}/{range}.pbf',
       sources: {
         'pmtiles': {
           type: 'vector',
-          url: `pmtiles://${TILES_URL}`,
-          attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
+          url: `http://localhost:3000/brisbane`,
+          // attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
         },
       },
       layers: [
         ...defaultLayers,
-        buildingsLayer,
+        // buildingsLayer
       ],
     };
 
@@ -122,7 +121,7 @@ function App() {
         {...viewState}
         ref={mapRef}
         styleDiffing
-        pitch={45}
+        pitch={ENABLE_3D ? 45 : 0}
 
         onLoad={onLoad}
         onClick={onClick}

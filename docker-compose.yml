@@ -1,0 +1,10 @@
+name: maplibre
+services:
+  martin:
+    image: ghcr.io/maplibre/martin:latest
+    command: [ "--config", "/etc/martin.yaml" ]
+    ports:
+      - "3000:3000"
+    volumes:
+      - $PWD/public:/files
+      - $PWD/config/martin.yaml:/etc/martin.yaml
