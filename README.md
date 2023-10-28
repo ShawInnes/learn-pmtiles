@@ -1,5 +1,11 @@
 # React Mapping
 
+## Highlights
+
+* pmtiles files can be served from S3 or any HTTP endpoint
+* this allows for offline/local-only mapping
+* they can also be served from a tile server such as martin
+
 ## Packages
 
 ### Map Display
