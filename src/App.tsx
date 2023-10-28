@@ -30,8 +30,8 @@ const NAVBAR_WIDTH = 60;
 const HEADER_HEIGHT = 40;
 const FOOTER_HEIGHT = 40;
 
-const ENABLE_3D = true;
-const LOCAL_URL = 'pmtiles://toledo.pmtiles';
+const ENABLE_3D = false;
+const LOCAL_URL = 'pmtiles://queensland.pmtiles';
 // const SERVER_URL = `http://localhost:3000/toledo`;
 // const SERVER_CATALOG_URL = `http://localhost:3000/catalog`;
 
@@ -98,11 +98,18 @@ function App() {
 
     setInteractiveLayerIds(['gps']);
 
-    // setViewState({
-    //   longitude: 152.988942,
-    //   latitude: -27.409726,
-    //   zoom: 15,
-    // })
+    setViewState({
+      longitude: 152.988942,
+      latitude: -27.409726,
+      zoom: 11,
+    });
+    /*
+        setViewState({
+          longitude: -4.024145,
+          latitude: 39.858045,
+          zoom: 14.3,
+        });
+    */
 
     // fetch(SERVER_URL)
     //   .then((response) => response.json())
@@ -114,11 +121,6 @@ function App() {
     //     // });
     //   });
 
-    setViewState({
-      longitude: -4.024145,
-      latitude: 39.858045,
-      zoom: 14.3,
-    });
 
     return () => {
       maplibregl.removeProtocol('pmtiles');
@@ -140,7 +142,7 @@ function App() {
       },
       layers: [
         ...defaultLayerStyles,
-         buildingsLayer,
+        buildingsLayer,
       ],
     };
 
@@ -156,6 +158,7 @@ function App() {
         if (error) {
           console.warn(error);
         } else {
+          // console.log(JSON.stringify(data))
           const points = data.records
             .filter((p: any) => p.position_lat && p.position_long)
             .map((p: any) => ([p.position_long, p.position_lat, p.enhanced_altitude]));
