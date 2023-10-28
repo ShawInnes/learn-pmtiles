@@ -11,6 +11,9 @@ dependencies:
   pmtiles:
     specifier: ^2.11.0
     version: 2.11.0
+  protomaps-themes-base:
+    specifier: 2.0.0-alpha.1
+    version: 2.0.0-alpha.1
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1790,6 +1793,10 @@ packages:
 
   /protocol-buffers-schema@3.6.0:
     resolution: {integrity: sha512-TdDRD+/QNdrCGCE7v8340QyuXd4kIWIgapsE2+n/SaGiSSbomYl4TjHlvIoCWRpE7wFt02EpB35VVA2ImcBVqw==}
+    dev: false
+
+  /protomaps-themes-base@2.0.0-alpha.1:
+    resolution: {integrity: sha512-eGAiUpBPAohnMvEHoF7NRWp7YuTNk/JsAVJ4733jqNw+/EF6Q5TMjqCOZScG3YSri5NStJg+9Upb95M2AQ3pjw==}
     dev: false
 
   /punycode@2.3.0:
